@@ -9,21 +9,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Slf4j
 @Service
 public class LibroService {
 
-    @Autowired
+    @Autowired //insercion de
     private LibroRepository repo;
 
     public Page<LibroDTO> getAllLibros(int page, int size){
-        Pageable pageable = QPageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size);
         Page<LibroEntity> libro = repo.findAll(pageable);
         return libro.map(this::convertirALibrosDTO);
     }

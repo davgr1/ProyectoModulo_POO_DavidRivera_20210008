@@ -10,14 +10,14 @@ import lombok.ToString;
 @ToString @EqualsAndHashCode
 public class LibroDTO {
     private Long idLibro;
-    @NotBlank
+    @NotBlank(message = "NO puede quedar nulo") //validar y espicicar al usiario sobre los datos que no pueden ser nulos
     private String titulo;
-    @NotBlank
+    @NotBlank(message = "El codigo no puede ser nulo")
     private String isbn;
-    @NotBlank
+    @NotBlank(message = "No puede ser nulo el año de publicacion")
     private Long añopublicacion;
-    @NotBlank
+    @NotBlank(message = "No puede quedar nulo")
     private String genero;
-    @NotBlank
+    @NotBlank(message = "no puede estar nulo")
     private Long autorid;
 }

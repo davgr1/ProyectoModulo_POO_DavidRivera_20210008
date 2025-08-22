@@ -1,6 +1,7 @@
 package ProyectoModulo_DavidRivera_20210008.Controller;
 
 import ProyectoModulo_DavidRivera_20210008.Models.DTO.LibroDTO;
+import ProyectoModulo_DavidRivera_20210008.Models.Exceptions.ExceptionLibro;
 import ProyectoModulo_DavidRivera_20210008.Service.LibroService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +73,42 @@ public class LibroController {
     ){
         if (bindingResult.hasErrors()){
             Map<String, String> errores = new HashMap<>();
-            bindingResult.getFieldError().f
+            bindingResult.getFieldErrors().forEach(error ->
+                    errores.put(error.getField(), error.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(errores);
+        }
+        try {
+            LibroDTO libroActualizar = service.updateLibro(id,libro);
+            return ResponseEntity.ok(libroActualizar);
+        }catch (ExceptionLibro e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                    "error", "Datos duplicados",
+                    "campo", e.getMessage()
+            ));
+        }
+    }
+
+    @DeleteMapping("/eliminarLibro/{id}")
+    public ResponseEntity<Map<String, Object>> eliminar(@PathVariable long id){
+        try {
+            if (!service.deleteLibro(id)){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).header(
+                        "X-Mensaje-Error", "Libro no encontrado").body(Map.of(
+                        "error", "Not Found",
+                        "message", "Libro eliminado",
+                        "timestamp", Instant.now().toString()
+                ));
+            }
+            return ResponseEntity.ok().body(Map.of(
+                    "status", "proceso completado",
+                    "message", "libro eliminado"
+            ));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "status", "Error",
+                    "message", "Error al eliminar",
+                    "detail", e.getMessage()
+            ));
         }
     }
 }
