@@ -63,14 +63,15 @@ public class LibroController {
         }
     }
 
-    @PutMapping("/modificarLibro/{id}")
-    public ResponseEntity<?> actualizar(
+    @PutMapping("/upadateLibro/{id}")
+    public ResponseEntity<?>actualizar(
             @PathVariable Long id,
             @Valid @RequestBody LibroDTO libro,
-            BindingResult bindingResult){
+            BindingResult bindingResult
+    ){
         if (bindingResult.hasErrors()){
-            Map<String, String> errors = new HashMap<>();
-            bindingResult.getFieldError().forEach(errors.put())
+            Map<String, String> errores = new HashMap<>();
+            bindingResult.getFieldError().f
         }
     }
 }
